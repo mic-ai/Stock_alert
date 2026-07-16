@@ -1,0 +1,46 @@
+trend:
+  ma_short: 20
+  ma_long: 50
+  momentum_threshold: 0.02
+  momentum_period: 5
+
+rsi:
+  period: 14
+  overbought: 70
+  oversold: 30
+
+wyckoff:
+  lookback: 20
+  sc:
+    volume_ratio: 2.0
+    range_ratio: 1.5
+  ar:
+    rebound_pct: 0.05
+    days_after_sc: 5
+  st:
+    tolerance: 0.02
+  spring:
+    low_breach_min: 0.01
+    low_breach_max: 0.03
+    recovery_days: 3
+  distribution:
+    volume_ratio: 1.5
+
+sector_indexes:
+  - ticker: "^SOX"
+    name: "Philadelphia Semiconductor Index"
+    sector: "semiconductor"
+    market: "US"
+  - ticker: "2516.T"
+    name: "日経半導体株指数ETF"
+    sector: "semiconductor"
+    market: "JP"
+
+data:
+  batch_size: 20
+  batch_sleep: 1.0
+  history_period: "90d"
+
+line:
+  api_endpoint: "https://api.line.me/v2/bot/message/push"
+  retry_count: 1

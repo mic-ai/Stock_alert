@@ -1,0 +1,31 @@
+ticker,name,sector,market
+6857.T,アドバンテスト,semiconductor,JP
+8035.T,東京エレクトロン,semiconductor,JP
+6146.T,ディスコ,semiconductor,JP
+6723.T,ルネサスエレクトロニクス,semiconductor,JP
+6963.T,ローム,semiconductor,JP
+7735.T,SCREENホールディングス,semiconductor,JP
+3436.T,SUMCO,semiconductor,JP
+4063.T,信越化学工業,semiconductor,JP
+6976.T,太陽誘電,semiconductor,JP
+6762.T,TDK,semiconductor,JP
+6971.T,京セラ,semiconductor,JP
+6981.T,村田製作所,semiconductor,JP
+6861.T,キーエンス,semiconductor,JP
+6588.T,東芝テック,semiconductor,JP
+6779.T,日本電波工業,semiconductor,JP
+NVDA,NVIDIA,semiconductor,US
+AMD,Advanced Micro Devices,semiconductor,US
+AMAT,Applied Materials,semiconductor,US
+LRCX,Lam Research,semiconductor,US
+KLAC,KLA Corporation,semiconductor,US
+MU,Micron Technology,semiconductor,US
+AVGO,Broadcom,semiconductor,US
+QCOM,Qualcomm,semiconductor,US
+TXN,Texas Instruments,semiconductor,US
+ASML,ASML Holding,semiconductor,US
+ADI,Analog Devices,semiconductor,US
+MRVL,Marvell Technology,semiconductor,US
+ON,ON Semiconductor,semiconductor,US
+NXPI,NXP Semiconductors,semiconductor,US
+MCHP,Microchip Technology,semiconductor,US
