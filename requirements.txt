@@ -1,6 +1,6 @@
 yfinance==0.2.54
-pandas>=2.0
-pandas-ta>=0.3.14b
+pandas>=2.0,<3.0
+pandas-ta==0.3.14b0
 requests>=2.31
 pyyaml>=6.0
 pytest>=8.0
