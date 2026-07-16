@@ -39,6 +39,10 @@ sector_indexes:
     name: "Materials Select Sector SPDR ETF"
     sector: "chemicals"
     market: "US"
+  - ticker: "ITB"
+    name: "iShares U.S. Home Construction ETF"
+    sector: "Construction"
+    market: "US"
 
 data:
   batch_size: 20
