@@ -35,6 +35,10 @@ sector_indexes:
     name: "日経半導体株指数ETF"
     sector: "semiconductor"
     market: "JP"
+  - ticker: "XLB"
+    name: "Materials Select Sector SPDR ETF"
+    sector: "chemicals"
+    market: "US"
 
 data:
   batch_size: 20
