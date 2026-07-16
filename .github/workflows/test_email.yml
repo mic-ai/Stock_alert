@@ -1,0 +1,39 @@
+name: Test Email Delivery
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test_email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send test email
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          NOTIFY_TO_EMAIL: ${{ secrets.NOTIFY_TO_EMAIL }}
+        run: |
+          python -c "
+          import os, sys
+          from notifier import send_email
+
+          ok = send_email(
+              'これはStock_alertシステムのメール配信テストです。このメールが届いていればGmail SMTP経由の通知は正常に機能しています。',
+              '【テスト】Stock_alert メール配信確認',
+              os.environ['GMAIL_USER'],
+              os.environ['GMAIL_APP_PASSWORD'],
+              os.environ.get('NOTIFY_TO_EMAIL', os.environ['GMAIL_USER']),
+              1,
+          )
+          print('送信成功' if ok else '送信失敗')
+          sys.exit(0 if ok else 1)
+          "
