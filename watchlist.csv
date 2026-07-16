@@ -50,3 +50,61 @@ APD,Air Products,chemicals,US
 LEN,Lennar,Construction,US
 DHI,D.R. Horton,Construction,US
 PHM,PulteGroup,Construction,US
+HEI,HEICO,Aerospace/Defense,US
+RKLB,Rocket Lab,Aerospace/Defense,US
+LMT,Lockheed Martin,Aerospace/Defense,US
+RTX,RTX Corporation,Aerospace/Defense,US
+NOC,Northrop Grumman,Aerospace/Defense,US
+GD,General Dynamics,Aerospace/Defense,US
+7011.T,三菱重工業,Aerospace/Defense,JP
+7012.T,川崎重工業,Aerospace/Defense,JP
+INSM,Insmed,Biotechnology,US
+REGN,Regeneron Pharmaceuticals,Biotechnology,US
+GILD,Gilead Sciences,Biotechnology,US
+VRTX,Vertex Pharmaceuticals,Biotechnology,US
+BIIB,Biogen,Biotechnology,US
+AMGN,Amgen,Biotechnology,US
+IONQ,IonQ Inc,Quantum Computing,US
+RGTI,Rigetti Computing,Quantum Computing,US
+QBTS,D-Wave Quantum,Quantum Computing,US
+QUBT,Quantum Computing Inc,Quantum Computing,US
+OKLO,Oklo,Nuclear Energy,US
+SMR,NuScale Power,Nuclear Energy,US
+CCJ,Cameco,Nuclear Energy,US
+UEC,Uranium Energy Corp,Nuclear Energy,US
+LEU,Centrus Energy,Nuclear Energy,US
+BWXT,BWX Technologies,Nuclear Energy,US
+FSLR,First Solar,Solar Energy,US
+ENPH,Enphase Energy,Solar Energy,US
+SEDG,SolarEdge Technologies,Solar Energy,US
+RUN,Sunrun,Solar Energy,US
+FLNC,Fluence Energy,Energy Storage,US
+STEM,Stem Inc,Energy Storage,US
+ENVX,Enovix,Energy Storage,US
+QS,QuantumScape,Energy Storage,US
+485A.T,パワーエックス,Energy Storage,JP
+6752.T,パナソニック ホールディングス,Energy Storage,JP
+1662.T,石油資源開発,Oil & Gas,JP
+1605.T,INPEX,Oil & Gas,JP
+5019.T,出光興産,Oil & Gas,JP
+XOM,Exxon Mobil,Oil & Gas,US
+CVX,Chevron,Oil & Gas,US
+1540.T,純金上場信託,Commodity/Gold,JP
+NEM,Newmont Corporation,Commodity/Gold,US
+AEM,Agnico Eagle Mines,Commodity/Gold,US
+1541.T,純プラチナ上場信託,Commodity/Platinum,JP
+SBSW,Sibanye Stillwater,Commodity/Platinum,US
+1542.T,純銀上場信託,Commodity/Silver,JP
+PAAS,Pan American Silver,Commodity/Silver,US
+WPM,Wheaton Precious Metals,Commodity/Silver,US
+5706.T,三井金属鉱業,Non-ferrous Metals,JP
+5711.T,三菱マテリアル,Non-ferrous Metals,JP
+5714.T,DOWAホールディングス,Non-ferrous Metals,JP
+FCX,Freeport-McMoRan,Non-ferrous Metals,US
+SCCO,Southern Copper,Non-ferrous Metals,US
+8951.T,日本ビルファンド投資法人,REIT,JP
+8985.T,ジャパン・ホテル・リート投資法人,REIT,JP
+8952.T,ジャパンリアルエステイト投資法人,REIT,JP
+3269.T,アドバンス・レジデンス投資法人,REIT,JP
+O,Realty Income,REIT,US
+PLD,Prologis,REIT,US

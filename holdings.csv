@@ -1,3 +1,24 @@
 ticker,name,acquired_date,shares,sector,market
-6988.T,日東電工,2025-10-09,100,chemicals,JP
+FLNC,Fluence Energy,2026-06-25,70,Energy Storage,US
+FSLR,First Solar,2026-01-15,15,Solar Energy,US
+HEI,HEICO,2025-08-25,2,Aerospace/Defense,US
+INSM,Insmed,2025-10-20,8,Biotechnology,US
+IONQ,IonQ Inc,2025-08-18,70,Quantum Computing,US
+OKLO,Oklo,2025-10-30,40,Nuclear Energy,US
+REGN,Regeneron Pharmaceuticals,2025-10-30,4,Biotechnology,US
+RGTI,Rigetti Computing,2025-10-20,30,Quantum Computing,US
+RKLB,Rocket Lab,2026-06-25,150,Aerospace/Defense,US
+SMR,NuScale Power,2025-10-30,150,Nuclear Energy,US
+1540.T,純金上場信託,2025-12-17,100,Commodity/Gold,JP
+1541.T,純プラチナ上場信託,2025-12-17,200,Commodity/Platinum,JP
+1542.T,純銀上場信託,2025-12-26,50,Commodity/Silver,JP
+1662.T,石油資源開発,2026-03-06,200,Oil & Gas,JP
+3436.T,SUMCO,2025-12-17,200,semiconductor,JP
+4063.T,信越化学工業,2025-10-07,100,chemicals,JP
+4204.T,積水化学工業,2025-10-09,200,chemicals,JP
+485A.T,パワーエックス,2026-06-05,100,Energy Storage,JP
+5706.T,三井金属鉱業,2026-06-09,100,Non-ferrous Metals,JP
 6330.T,東洋エンジニアリング,2026-01-14,100,Construction,JP
+6988.T,日東電工,2025-10-09,100,chemicals,JP
+8951.T,日本ビルファンド投資法人,2025-10-31,15,REIT,JP
+8985.T,ジャパン・ホテル・リート投資法人,2025-08-29,3,REIT,JP
