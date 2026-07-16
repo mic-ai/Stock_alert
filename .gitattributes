@@ -1,0 +1,7 @@
+# Gitリポジトリ内の全ファイルの改行コードをLFに統一（GitHub Actions = Linux で実行するため）
+* text=auto eol=lf
+
+# バイナリファイルは変換しない
+*.png binary
+*.jpg binary
+*.csv text eol=lf
