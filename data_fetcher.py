@@ -4,13 +4,21 @@ import pandas as pd
 import yfinance as yf
 
 
+def _flatten_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """yfinanceが単一銘柄でもMultiIndexカラムを返す場合があるため、Tickerレベルを除去して平坦化する。"""
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.droplevel("Ticker")
+    return df
+
+
 def fetch_index_data(ticker: str, period: str) -> pd.DataFrame:
     """セクター指数の価格・出来高データを取得。失敗時は空DataFrameを返す。"""
     try:
         df = yf.download(ticker, period=period, progress=False, auto_adjust=True)
         if df.empty:
             logging.warning(f"[data_fetcher] {ticker}: データ空（レート制限またはティッカー誤り）")
-        return df
+            return df
+        return _flatten_columns(df)
     except Exception as e:
         logging.warning(f"[data_fetcher] {ticker}: 取得失敗 - {e}")
         return pd.DataFrame()
@@ -41,7 +49,7 @@ def fetch_stock_data(
                         logging.warning(f"[data_fetcher] {ticker}: データ空")
                         result[ticker] = pd.DataFrame()
                     else:
-                        result[ticker] = df
+                        result[ticker] = _flatten_columns(df)
                 except Exception:
                     logging.warning(f"[data_fetcher] {ticker}: 抽出失敗")
                     result[ticker] = pd.DataFrame()
