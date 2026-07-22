@@ -73,21 +73,31 @@ def main() -> None:
     buy_candidates = run_buy_screening(watchlist, trend_results, stock_data, cfg)
     sell_candidates = run_sell_screening(holdings, trend_results, stock_data, cfg)
 
-    # 4. メール通知
-    retry = cfg["line"]["retry_count"]
-    if buy_candidates:
-        subject, body = format_buy_alert(buy_candidates, date_str)
-        ok = send_email(body, subject, gmail_user, gmail_app_password, to_address, retry)
-        logging.info(f"買い候補通知: {'成功' if ok else '失敗'} ({len(buy_candidates)}銘柄)")
-    else:
-        logging.info("買い候補なし")
+     # 4. メール通知（候補ゼロでも毎日日次レポートを送信）
+      retry = cfg["line"]["retry_count"]
 
-    if sell_candidates:
-        subject, body = format_sell_alert(sell_candidates, date_str)
-        ok = send_email(body, subject, gmail_user, gmail_app_password, to_address, retry)
-        logging.info(f"売り候補通知: {'成功' if ok else '失敗'} ({len(sell_candidates)}銘柄)")
-    else:
-        logging.info("売り候補なし")
+      body_parts = []
+
+      if buy_candidates:
+          _, buy_body = format_buy_alert(buy_candidates, date_str)
+          body_parts.append(buy_body)
+          logging.info(f"買い候補: {len(buy_candidates)}銘柄")
+      else:
+          body_parts.append("【買い候補】\nなし\n")
+          logging.info("買い候補なし")
+
+      if sell_candidates:
+          _, sell_body = format_sell_alert(sell_candidates, date_str)
+          body_parts.append(sell_body)
+          logging.info(f"売り候補: {len(sell_candidates)}銘柄")
+      else:
+          body_parts.append("【売り候補】\nなし\n")
+          logging.info("売り候補なし")
+
+      subject = f"【株スクリーニング日次レポート】{date_str} 買い{len(buy_candidates)}件 / 売り{len(sell_candidates)}件"
+      body = "\n".join(body_parts)
+      ok = send_email(body, subject, gmail_user, gmail_app_password, to_address, retry)
+      logging.info(f"日次レポート送信: {'成功' if ok else '失敗'}")
 
 
 if __name__ == "__main__":
