@@ -1,15 +1,23 @@
 import logging
 import os
 import sys
-from datetime import datetime
 
 import pandas as pd
 import yaml
 
 from data_fetcher import fetch_index_data, fetch_stock_data
+from date_utils import today_jst
 from trend_rules import judge_trend
 from screener import run_buy_screening, run_sell_screening
 from notifier import send_email, format_buy_alert, format_sell_alert
+from prediction_tracker import (
+    load_predictions,
+    save_predictions,
+    build_prediction_rows,
+    append_predictions,
+)
+
+PREDICTIONS_PATH = "predictions.csv"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -69,35 +77,52 @@ def main() -> None:
     )
 
     # 3. スクリーニング
-    date_str = datetime.now().strftime("%Y-%m-%d")
+    date_str = today_jst()
     buy_candidates = run_buy_screening(watchlist, trend_results, stock_data, cfg)
     sell_candidates = run_sell_screening(holdings, trend_results, stock_data, cfg)
 
-     # 4. メール通知（候補ゼロでも毎日日次レポートを送信）
-      retry = cfg["line"]["retry_count"]
+    # 4. 予測ログへの記録（メール送信の成否に関わらず記録する。
+    #    追跡対象はスクリーニングルールの精度であり、SMTP成否ではないため）
+    try:
+        e_cfg = cfg["evaluation"]
+        predictions_df = load_predictions(PREDICTIONS_PATH)
+        buy_rows = build_prediction_rows(buy_candidates, "buy", date_str, e_cfg["business_days"])
+        sell_rows = build_prediction_rows(sell_candidates, "sell", date_str, e_cfg["business_days"])
+        predictions_df, n_skipped_buy = append_predictions(predictions_df, buy_rows)
+        predictions_df, n_skipped_sell = append_predictions(predictions_df, sell_rows)
+        save_predictions(predictions_df, PREDICTIONS_PATH)
+        logging.info(
+            f"[main] predictions.csv更新: 買い{len(buy_rows) - n_skipped_buy}件追加"
+            f"（重複{n_skipped_buy}件スキップ）、売り{len(sell_rows) - n_skipped_sell}件追加"
+            f"（重複{n_skipped_sell}件スキップ）"
+        )
+    except Exception as e:
+        logging.warning(f"[main] predictions.csv更新失敗: {e}")
 
-      body_parts = []
+    # 5. メール通知（候補ゼロでも毎日日次レポートを送信）
+    retry = cfg["email"]["retry_count"]
+    body_parts = []
 
-      if buy_candidates:
-          _, buy_body = format_buy_alert(buy_candidates, date_str)
-          body_parts.append(buy_body)
-          logging.info(f"買い候補: {len(buy_candidates)}銘柄")
-      else:
-          body_parts.append("【買い候補】\nなし\n")
-          logging.info("買い候補なし")
+    if buy_candidates:
+        _, buy_body = format_buy_alert(buy_candidates, date_str)
+        body_parts.append(buy_body)
+        logging.info(f"買い候補: {len(buy_candidates)}銘柄")
+    else:
+        body_parts.append("【買い候補】\nなし\n")
+        logging.info("買い候補なし")
 
-      if sell_candidates:
-          _, sell_body = format_sell_alert(sell_candidates, date_str)
-          body_parts.append(sell_body)
-          logging.info(f"売り候補: {len(sell_candidates)}銘柄")
-      else:
-          body_parts.append("【売り候補】\nなし\n")
-          logging.info("売り候補なし")
+    if sell_candidates:
+        _, sell_body = format_sell_alert(sell_candidates, date_str)
+        body_parts.append(sell_body)
+        logging.info(f"売り候補: {len(sell_candidates)}銘柄")
+    else:
+        body_parts.append("【売り候補】\nなし\n")
+        logging.info("売り候補なし")
 
-      subject = f"【株スクリーニング日次レポート】{date_str} 買い{len(buy_candidates)}件 / 売り{len(sell_candidates)}件"
-      body = "\n".join(body_parts)
-      ok = send_email(body, subject, gmail_user, gmail_app_password, to_address, retry)
-      logging.info(f"日次レポート送信: {'成功' if ok else '失敗'}")
+    subject = f"【株スクリーニング日次レポート】{date_str} 買い{len(buy_candidates)}件 / 売り{len(sell_candidates)}件"
+    body = "\n".join(body_parts)
+    ok = send_email(body, subject, gmail_user, gmail_app_password, to_address, retry)
+    logging.info(f"日次レポート送信: {'成功' if ok else '失敗'}")
 
 
 if __name__ == "__main__":

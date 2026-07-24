@@ -97,6 +97,13 @@ data:
   batch_sleep: 1.0
   history_period: "90d"
 
-line:
-  api_endpoint: "https://api.line.me/v2/bot/message/push"
+email:
   retry_count: 1
+
+evaluation:
+  business_days: 5
+  buy_hit_pct: 0.02
+  sell_hit_pct: 0.02
+  fetch_period: "10d"
+  window_mode: "count"   # "count" または "months"
+  window_value: 30

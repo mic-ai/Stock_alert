@@ -35,6 +35,7 @@ def run_buy_screening(
                 "ticker": ticker,
                 "name": str(row.get("name", ticker)),
                 "rsi": round(rsi_val, 1),
+                "close": round(float(df["Close"].iloc[-1]), 2),
                 "patterns": matched,
                 "sector": str(row["sector"]),
                 "market": str(row["market"]),
@@ -58,6 +59,7 @@ def run_sell_screening(
         df = stock_data.get(ticker, pd.DataFrame())
         if df.empty:
             continue
+        close_val = round(float(df["Close"].iloc[-1]), 2)
         rsi_series = calculate_rsi(df["Close"], cfg["rsi"]["period"])
         rsi_val: float | None = None
         if rsi_series is not None and not rsi_series.empty:
@@ -76,6 +78,7 @@ def run_sell_screening(
                 "ticker": ticker,
                 "name": str(row.get("name", ticker)),
                 "rsi": round(rsi_val, 1) if rsi_val is not None else "N/A",
+                "close": close_val,
                 "reason": reason,
                 "sector": str(row.get("sector", "")),
                 "market": str(row.get("market", "")),

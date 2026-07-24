@@ -50,3 +50,26 @@ def format_sell_alert(candidates: list[dict], date_str: str) -> tuple[str, str]:
         lines.append(f"▶ {c['ticker']} {c['name']} [{c['market']}]")
         lines.append(f"  RSI: {c['rsi']} | 理由: {reason_str}\n")
     return subject, "\n".join(lines)
+
+
+def _format_hit_rate_block(label: str, agg: dict) -> list[str]:
+    lines = [f"■ {label}"]
+    if agg["hit_rate"] is None:
+        lines.append("  評価データなし\n")
+        return lines
+    hit_rate_pct = agg["hit_rate"] * 100
+    lines.append(
+        f"  的中率: {hit_rate_pct:.1f}% ({agg['hit_count']}/{agg['total']}件、不的中{agg['miss_count']}件)\n"
+    )
+    return lines
+
+
+def format_evaluation_summary(agg: dict, date_str: str) -> tuple[str, str]:
+    """的中率評価バッチの日次サマリー(subject, body)を返す。
+    agg = {"buy": {...}, "sell": {...}} （prediction_tracker.aggregate_hit_rateの戻り値）。
+    """
+    subject = f"【日次レポート】的中率サマリー ({date_str})"
+    lines = [f"【的中率サマリー】{date_str}\n"]
+    lines += _format_hit_rate_block("買い候補", agg["buy"])
+    lines += _format_hit_rate_block("売り候補", agg["sell"])
+    return subject, "\n".join(lines)
