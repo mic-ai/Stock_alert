@@ -269,3 +269,47 @@ main.py                  … エントリーポイント、GitHub Actionsから�
   が発生することを実装時のスモークテストで発見・修正済み（該当列を明示的に
   `astype("float64")`/`astype("object")`してから代入する）。今後predictions.csv周りを
   改修する際は、CSV経由で読み込んだDataFrameへの型付き代入は同様の問題が起きうる点に注意
+
+## 実装済み内容（2026-07-28: パニック売り・底値圏検出機能の追加）
+
+`指示書_パニック底値検出機能の実装.md` に基づき、watchlist.csv全体の集計から市場規模の
+パニック売り（`panic_alert`）と底打ち候補（`bottom_candidate`）を検出する機能を追加。
+
+### 追加・変更ファイル
+- `panic_bottom_detector.py`（新規）… ①クロス市場デカップリング、②セリング・クライマックス
+  breadth、③RSI極端乖離breadth＋連続急落の3指標を合成した`market_panic_score`を算出
+- `config.yaml`: `panic_detector:` セクションを新設し、全閾値を外出し
+- `notifier.py`: `format_panic_alert_block()` / `format_bottom_candidate_block()` /
+  `format_low_reliability_note()` を追加
+- `main.py`: 個別銘柄スクリーニングとは独立した`try/except`ブロックで
+  `get_market_panic_status()`を呼び出し、結果を既存の日次レポートメール本文に追記
+  （的中率トラッキングと同様、失敗しても他の処理には影響しない設計）
+- `tests/test_panic_bottom_detector.py`（新規）… 合成データによるユニットテスト
+
+### 提供された指示書・モジュールからの変更点（事前確認の結果、前提が実態と異なっていたため）
+- **LINE Messaging API不使用**: 提供モジュールの`send_line_alert()`プレースホルダーは削除し、
+  既存のGmail SMTP経由の日次レポートメールに統合（本プロジェクトはLINEチャネル未取得のため）
+- **pandas-ta不使用**: 提供モジュールは`import pandas_ta as ta`を前提にしていたが、
+  pandas-taはGitHub Actions環境にインストールできず既に本プロジェクトから除外済みのため、
+  `indicators.calculate_rsi()`（Wilder EWM自前実装）に置換
+- **データ取得を既存基盤に統合**: 提供モジュールの`fetch_watchlist_data()`は1銘柄ずつ
+  `yf.download()`を呼びバッチ処理・スリープが無かった（ルール4違反）ため、
+  `data_fetcher.fetch_stock_data()`/`fetch_index_data()`を再利用し、バッチ処理・
+  MultiIndexカラムのフラット化・失敗時ログ出力を統一
+- **実行タイミング**: 指示書は「1日2回（5:30/8:00 JST）運用」を前提にしていたが、
+  実際のワークフローは`daily_screening.yml`（8:00 JST）1本のみのため、そこに統合
+- **集計単位**: watchlist全体で単一の`market_panic_score`とし、セクター別分割は行わない
+  （ユーザー確認済み）
+- **閾値のバックテスト**: 実施せず、指示書の初期値のまま導入し運用しながら調整する方針
+  （ユーザー確認済み）
+
+### 既知の設計上の注意点
+- `_selling_climax_flags()`の出来高z-scoreはローリング窓に当日自身を含む自己参照設計のため、
+  z-scoreの理論上限は`(window-1)/√window`となる（例: window=5だと最大約1.79で、
+  `volume_z_threshold=2.0`を理論上超えられない）。デフォルトの`volume_window=60`では
+  上限が約7.6のため実用上問題ないが、`volume_window`を将来小さく変更する場合は
+  `volume_z_threshold`との整合性に注意すること
+- パニック判定用のデータ取得はwatchlist全体を対象に`period="1y"`で独立取得しており、
+  `main.py`の個別スクリーニング用データ（`history_period: "90d"`）とは別に
+  yfinanceへのリクエストが発生する（`volume_window=60`等のローリング計算に90日では
+  不足するため）。1回の実行あたりのyfinanceリクエスト数が増える点は把握しておくこと

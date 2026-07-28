@@ -100,6 +100,38 @@ data:
 email:
   retry_count: 1
 
+panic_detector:
+  # ①クロス市場デカップリング
+  us_index_ticker: "^GSPC"
+  sox_index_ticker: "^SOX"
+  jp_drop_threshold: -0.02
+  us_flat_threshold: -0.005
+  # ②セリング・クライマックス
+  volume_window: 60
+  volume_z_threshold: 2.0
+  range_multiplier: 1.5
+  close_near_low_threshold: 0.3
+  climax_breadth_threshold: 0.25
+  # ③RSI極端乖離 + 連続急落
+  rsi_oversold_threshold: 20.0
+  rsi_oversold_breadth_threshold: 0.30
+  decline_day_threshold: -0.05
+  decline_lookback_days: 5
+  decline_min_occurrences: 2
+  # 総合スコアの重み・発火閾値
+  weight_decoupling: 2.0
+  weight_climax_breadth: 2.0
+  weight_rsi_breadth: 1.0
+  weight_consecutive_decline: 1.0
+  alert_score_threshold: 4.0
+  # 底打ち候補判定
+  bottom_lookback_days: 10
+  bottom_confirm_days: 2
+  bottom_breadth_decline_ratio: 0.5
+  # データ取得(PanicDetectorConfigのフィールドではなく、main.py側で個別に読む値)
+  data_period: "1y"
+  low_reliability_threshold: 0.5
+
 evaluation:
   business_days: 5
   buy_hit_pct: 0.02

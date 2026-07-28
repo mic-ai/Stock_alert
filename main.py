@@ -9,13 +9,21 @@ from data_fetcher import fetch_index_data, fetch_stock_data
 from date_utils import today_jst
 from trend_rules import judge_trend
 from screener import run_buy_screening, run_sell_screening
-from notifier import send_email, format_buy_alert, format_sell_alert
+from notifier import (
+    send_email,
+    format_buy_alert,
+    format_sell_alert,
+    format_panic_alert_block,
+    format_bottom_candidate_block,
+    format_low_reliability_note,
+)
 from prediction_tracker import (
     load_predictions,
     save_predictions,
     build_prediction_rows,
     append_predictions,
 )
+from panic_bottom_detector import config_from_dict, get_market_panic_status
 
 PREDICTIONS_PATH = "predictions.csv"
 
@@ -99,7 +107,29 @@ def main() -> None:
     except Exception as e:
         logging.warning(f"[main] predictions.csv更新失敗: {e}")
 
-    # 5. メール通知（候補ゼロでも毎日日次レポートを送信）
+    # 5. 市場パニック・底値圏検出（watchlist全体の集計、既存の個別銘柄スクリーニングとは独立）
+    panic_status = None
+    try:
+        p_cfg_dict = cfg.get("panic_detector", {})
+        panic_cfg = config_from_dict(p_cfg_dict)
+        panic_status = get_market_panic_status(
+            watchlist["ticker"].dropna().unique().tolist(),
+            panic_cfg,
+            period=p_cfg_dict.get("data_period", "1y"),
+            batch_size=cfg["data"]["batch_size"],
+            batch_sleep=cfg["data"]["batch_sleep"],
+            low_reliability_threshold=p_cfg_dict.get("low_reliability_threshold", 0.5),
+        )
+        if panic_status:
+            logging.info(
+                f"[panic] score={panic_status['market_panic_score']:.1f} "
+                f"panic_alert={panic_status['panic_alert']} "
+                f"bottom_candidate={panic_status['bottom_candidate']}"
+            )
+    except Exception as e:
+        logging.warning(f"[main] 市場パニック判定に失敗: {e}")
+
+    # 6. メール通知（候補ゼロでも毎日日次レポートを送信）
     retry = cfg["email"]["retry_count"]
     body_parts = []
 
@@ -118,6 +148,14 @@ def main() -> None:
     else:
         body_parts.append("【売り候補】\nなし\n")
         logging.info("売り候補なし")
+
+    if panic_status:
+        if panic_status["low_reliability"]:
+            body_parts.append(format_low_reliability_note(panic_status))
+        if panic_status["panic_alert"]:
+            body_parts.append(format_panic_alert_block(panic_status))
+        if panic_status["bottom_candidate"]:
+            body_parts.append(format_bottom_candidate_block(panic_status))
 
     subject = f"【株スクリーニング日次レポート】{date_str} 買い{len(buy_candidates)}件 / 売り{len(sell_candidates)}件"
     body = "\n".join(body_parts)

@@ -64,6 +64,41 @@ def _format_hit_rate_block(label: str, agg: dict) -> list[str]:
     return lines
 
 
+def format_panic_alert_block(status: dict) -> str:
+    """市場パニック警戒ブロック(日次レポート本文への追記用)。"""
+    lines = [
+        "\n【市場パニック警戒】",
+        f"パニックスコア: {status['market_panic_score']:.1f} / 閾値: {status['alert_score_threshold']:.1f}",
+        f"クロス市場デカップリング: {'該当' if status['decoupling'] else '非該当'}",
+        f"セリングクライマックスbreadth: {status['climax_breadth']:.1%}",
+        f"RSI売られ過ぎbreadth: {status['rsi_breadth']:.1%}",
+        f"連続急落: {'該当' if status['consecutive_decline'] else '非該当'}",
+        "※自動検知シグナルです。必ずご自身で状況を確認してください。\n",
+    ]
+    return "\n".join(lines)
+
+
+def format_bottom_candidate_block(status: dict) -> str:
+    """底打ち候補シグナルブロック(日次レポート本文への追記用)。"""
+    lines = [
+        "\n【底打ち候補シグナル】",
+        "直近のパニックがピークアウトし、沈静化の兆候が見られます。",
+        f"セリングクライマックスbreadth: {status['climax_breadth']:.1%}",
+        f"watchlist平均騰落率: {status['jp_avg_return']:.2%}",
+        "※あくまで候補シグナルです。Wyckoff法のAR/STの形成状況もあわせてご確認ください。\n",
+    ]
+    return "\n".join(lines)
+
+
+def format_low_reliability_note(status: dict) -> str:
+    """パニック判定の元データが不足している場合の注記ブロック。"""
+    return (
+        "\n【注意】市場パニック判定の信頼性低下\n"
+        f"watchlist {status['n_total']}銘柄中 {status['n_fetched']}銘柄のみ取得成功のため、"
+        "上記のパニック判定は参考程度としてください。\n"
+    )
+
+
 def format_evaluation_summary(agg: dict, date_str: str) -> tuple[str, str]:
     """的中率評価バッチの日次サマリー(subject, body)を返す。
     agg = {"buy": {...}, "sell": {...}} （prediction_tracker.aggregate_hit_rateの戻り値）。
