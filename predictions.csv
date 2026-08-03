@@ -1,5 +1,5 @@
 prediction_id,date,ticker,signal_type,basis_price,eval_due_date,eval_price,result,status
-2026-07-27_HEI_buy,2026-07-27,HEI,buy,349.61,2026-08-03,,,pending
-2026-07-27_7011.T_buy,2026-07-27,7011.T,buy,3945.0,2026-08-03,,,pending
-2026-07-27_FSLR_sell,2026-07-27,FSLR,sell,202.82,2026-08-03,,,pending
-2026-07-27_3436.T_sell,2026-07-27,3436.T,sell,3623.0,2026-08-03,,,pending
+2026-07-27_HEI_buy,2026-07-27,HEI,buy,349.61,2026-08-03,356.36,miss,evaluated
+2026-07-27_7011.T_buy,2026-07-27,7011.T,buy,3945.0,2026-08-03,3764.0,miss,evaluated
+2026-07-27_FSLR_sell,2026-07-27,FSLR,sell,202.82,2026-08-03,211.03,miss,evaluated
+2026-07-27_3436.T_sell,2026-07-27,3436.T,sell,3623.0,2026-08-03,3357.0,hit,evaluated
