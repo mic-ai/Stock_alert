@@ -3,3 +3,9 @@ prediction_id,date,ticker,signal_type,basis_price,eval_due_date,eval_price,resul
 2026-07-27_7011.T_buy,2026-07-27,7011.T,buy,3945.0,2026-08-03,3764.0,miss,evaluated
 2026-07-27_FSLR_sell,2026-07-27,FSLR,sell,202.82,2026-08-03,211.03,miss,evaluated
 2026-07-27_3436.T_sell,2026-07-27,3436.T,sell,3623.0,2026-08-03,3357.0,hit,evaluated
+2026-08-06_HEI_buy,2026-08-06,HEI,buy,366.8,2026-08-13,,,pending
+2026-08-06_GD_buy,2026-08-06,GD,buy,384.08,2026-08-13,,,pending
+2026-08-06_7011.T_buy,2026-08-06,7011.T,buy,4000.0,2026-08-13,,,pending
+2026-08-06_INSM_buy,2026-08-06,INSM,buy,99.02,2026-08-13,,,pending
+2026-08-06_GILD_buy,2026-08-06,GILD,buy,131.76,2026-08-13,,,pending
+2026-08-06_VRTX_buy,2026-08-06,VRTX,buy,484.83,2026-08-13,,,pending
